@@ -28,8 +28,8 @@ class CategoryResource extends Resource
                     ->afterStateUpdated(function (Set $set, $state) {
                         $set('slug', Category::generateUniqueSlug($state));
                     })
-                    ->required()
                     ->live(onBlur: true)
+                    ->required()
                     ->maxLength(255),
                 Forms\Components\TextInput::make('slug')
                     ->required()
