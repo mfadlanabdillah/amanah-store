@@ -15,6 +15,8 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Filament\Forms\Set;
+use App\Filament\Clusters\Products;
 
 class ProductResource extends Resource
 {
@@ -22,11 +24,17 @@ class ProductResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
+    protected static ?string $cluster = Products::class;
+
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
                 Forms\Components\TextInput::make('name')
+                    ->afterStateUpdated(function (Set $set, $state) {
+                        $set('slug', Product::generateUniqueSlug($state));
+                    })
+                    ->live(onBlur: true)
                     ->required()
                     ->maxLength(255),
                 Forms\Components\Select::make('category_id')
@@ -38,6 +46,7 @@ class ProductResource extends Resource
                     ->searchDebounce(300),
                 Forms\Components\TextInput::make('slug')
                     ->required()
+                    ->readOnly()
                     ->maxLength(255),
                 Forms\Components\TextInput::make('stock')
                     ->required()
@@ -46,12 +55,12 @@ class ProductResource extends Resource
                 Forms\Components\TextInput::make('price')
                     ->required()
                     ->numeric()
-                    ->prefix('$'),
-                    Forms\Components\FileUpload::make('image')
+                    ->prefix('Rp '),
+                Forms\Components\FileUpload::make('image')
                     ->image(),
-                    Forms\Components\TextInput::make('barcode')
+                Forms\Components\TextInput::make('barcode')
                     ->maxLength(255),
-                    Forms\Components\Select::make('brand_id')
+                Forms\Components\Select::make('brand_id')
                     ->relationship('brand', 'name')
                     ->options(Brand::whereNull('deleted_at')->get()->pluck('name', 'id'))
                     ->searchable()
@@ -95,6 +104,10 @@ class ProductResource extends Resource
     {
         return $table
             ->columns([
+                Tables\Columns\ImageColumn::make('image')
+                    ->width(400)
+                    ->height(400)
+                    ->size(80),
                 Tables\Columns\TextColumn::make('name')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('category.name')
@@ -106,11 +119,10 @@ class ProductResource extends Resource
                     ->numeric()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('price')
-                    ->money()
+                    ->money('IDR')
                     ->sortable(),
                 Tables\Columns\IconColumn::make('is_active')
                     ->boolean(),
-                Tables\Columns\ImageColumn::make('image'),
                 Tables\Columns\TextColumn::make('barcode')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('brand.name')

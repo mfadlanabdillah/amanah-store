@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use App\Models\Category;
 use App\Models\ProductModel;
 use App\Models\Brand;
+use Illuminate\Support\Str;
 
 class Product extends Model
 {
@@ -46,5 +47,18 @@ class Product extends Model
     public function category(): BelongsTo
     {
         return $this->belongsTo(Category::class);
+    }
+
+    public static function generateUniqueSlug($name)
+    {
+        $slug = Str::slug($name);
+        $counter = 1;
+
+        while (self::where('slug', $slug)->exists()) {
+            $slug = Str::slug($name . '-' . $counter);
+            $counter++;
+        }
+
+        return $slug;
     }
 }
