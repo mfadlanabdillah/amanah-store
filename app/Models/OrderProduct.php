@@ -6,7 +6,10 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use App\Models\Order;
 use App\Models\Product;
+use Illuminate\Database\Eloquent\Attributes\ObservedBy;
+use App\Observers\OrderProductObserver;
 
+#[ObservedBy(OrderProductObserver::class)]
 class OrderProduct extends Model
 {
     protected $fillable = [
