@@ -24,6 +24,8 @@ class ProductResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-m-building-storefront';
 
+    protected static ?string $slug = 'products-list';
+
     protected static ?string $cluster = Products::class;
 
     protected static ?int $navigationSort = 1;
@@ -107,16 +109,16 @@ class ProductResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\ImageColumn::make('image')
-                    ->width(400)
-                    ->height(400)
-                    ->size(80),
+                    ->square()
+                    ->grow()
+                    ->size(100),
                 Tables\Columns\TextColumn::make('name')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('category.name')
-                    ->numeric()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('slug')
-                    ->searchable(),
+                // Tables\Columns\TextColumn::make('category.name')
+                //     ->numeric()
+                //     ->sortable(),
+                // Tables\Columns\TextColumn::make('slug')
+                //     ->searchable(),
                 Tables\Columns\TextColumn::make('stock')
                     ->numeric()
                     ->sortable(),
@@ -125,14 +127,14 @@ class ProductResource extends Resource
                     ->sortable(),
                 Tables\Columns\IconColumn::make('is_active')
                     ->boolean(),
-                Tables\Columns\TextColumn::make('barcode')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('brand.name')
-                    ->numeric()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('productModel.name')
-                    ->numeric()
-                    ->sortable(),
+                // Tables\Columns\TextColumn::make('barcode')
+                //     ->searchable(),
+                // Tables\Columns\TextColumn::make('brand.name')
+                //     ->numeric()
+                //     ->sortable(),
+                // Tables\Columns\TextColumn::make('productModel.name')
+                //     ->numeric()
+                //     ->sortable(),
                 Tables\Columns\TextColumn::make('imei1')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('imei2')
@@ -143,14 +145,14 @@ class ProductResource extends Resource
                     ->searchable(),
                 Tables\Columns\TextColumn::make('storage_capacity')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('screen_size')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('processor')
-                    ->searchable(),
+                // Tables\Columns\TextColumn::make('screen_size')
+                //     ->searchable(),
+                // Tables\Columns\TextColumn::make('processor')
+                //     ->searchable(),
                 Tables\Columns\TextColumn::make('ram')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('battery_capacity')
-                    ->searchable(),
+                // Tables\Columns\TextColumn::make('battery_capacity')
+                //     ->searchable(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()

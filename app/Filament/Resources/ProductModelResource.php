@@ -21,6 +21,8 @@ class ProductModelResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
+    protected static ?int $navigationSort = 4;
+
     protected static ?string $cluster = Products::class;
 
     public static function form(Form $form): Form
@@ -57,8 +59,8 @@ class ProductModelResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('name')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('slug')
-                    ->searchable(),
+                // Tables\Columns\TextColumn::make('slug')
+                //     ->searchable(),
                 Tables\Columns\TextColumn::make('brand.name')
                     ->numeric()
                     ->sortable(),

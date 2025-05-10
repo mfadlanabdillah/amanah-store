@@ -136,18 +136,19 @@ class OrderResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('name')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('gender'),
+                Tables\Columns\TextColumn::make('gender')
+                    ->searchable()
+                    ->formatStateUsing(fn ($state) => $state == 'male' ? 'Laki-laki' : 'Perempuan'),
                 Tables\Columns\TextColumn::make('total_price')
-                    ->numeric()
+                    ->money('IDR')
                     ->sortable(),
                 Tables\Columns\TextColumn::make('paymentMethod.name')
-                    ->numeric()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('paid_amount')
-                    ->numeric()
+                    ->money('IDR')
                     ->sortable(),
                 Tables\Columns\TextColumn::make('change_amount')
-                    ->numeric()
+                    ->money('IDR')
                     ->sortable(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
@@ -274,12 +275,24 @@ class OrderResource extends Resource
         $selectedProducts = collect($get('orderProducts'))->filter(fn($item) => !empty($item['product_id']) && !empty($item['quantity']));
         $productIds = $selectedProducts->pluck('product_id')->all();
         $prices = Product::whereIn('id', $productIds)->pluck('price', 'id');
+
         $total = $selectedProducts->reduce(function ($total, $product) use ($prices) {
             $price = $prices[$product['product_id']] ?? 0;
             $quantity = $product['quantity'] ?? 0;
             return $total + ($price * $quantity);
         }, 0);
+
         $set('total_price', $total);
+
+        // Update paid amount to match total price if it's less
+        $paidAmount = (int) $get('paid_amount') ?? 0;
+        if ($paidAmount < $total) {
+            $set('paid_amount', $total);
+        }
+
+        // Recalculate change amount
+        $exchangePaid = $paidAmount - $total;
+        $set('change_amount', max(0, $exchangePaid));
     }
 
     protected static function updateExchangePaid(Forms\Get $get, Forms\Set $set): void

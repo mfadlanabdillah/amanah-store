@@ -26,4 +26,22 @@ class EditOrder extends EditRecord
     {
         return 'Order updated successfully.';
     }
+
+    protected function getFormActions(): array
+    {
+        return [
+            Actions\Action::make('save')
+                ->action(fn () => $this->save())
+                ->extraAttributes(['class' => 'w-full'])
+                ->label('Simpan Perubahan Data')
+                ->requiresConfirmation()
+                ->color('success')
+                ->modalSubmitActionLabel('Simpan')
+                ->modalCancelActionLabel('Cek Kembali')
+                ->modalHeading('Simpan Perubahan Data?')
+                ->modalDescription('Pastikan semua data sudah benar sebelum menyimpan.')
+                ->icon('heroicon-s-check'),
+        ];
+    }
+
 }

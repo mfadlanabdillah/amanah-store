@@ -8,6 +8,7 @@ use App\Models\Category;
 use App\Models\ProductModel;
 use App\Models\Brand;
 use Illuminate\Support\Str;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Product extends Model
 {
@@ -60,5 +61,21 @@ class Product extends Model
         }
 
         return $slug;
+    }
+
+    public function getImageUrlAttribute()
+    {
+        return $this->image ? url('storage/' . $this->image) : null;
+    }
+
+    public function scopeSearch($query, $search)
+    {
+        return $query->where('name', 'ilike', '%' . $search . '%')
+            ->orWhere('barcode', 'ilike', '%' . $search . '%');
+    }
+
+    public function orderProducts(): HasMany
+    {
+        return $this->hasMany(OrderProduct::class);
     }
 }
