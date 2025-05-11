@@ -35,6 +35,11 @@ class Product extends Model
         'additional_specs',
         'description'
     ];
+
+    protected $appends = [
+        'image_url'
+    ];
+
     public function productModel(): BelongsTo
     {
         return $this->belongsTo(ProductModel::class);

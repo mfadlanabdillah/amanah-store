@@ -14,8 +14,17 @@ class PaymentMethod extends Model
         'is_cash'
     ];
 
+    protected $appends = [
+        'image_url'
+    ];
+
     public function orders(): HasMany
     {
         return $this->hasMany(Order::class);
+    }
+
+    public function getImageUrlAttribute()
+    {
+        return $this->image ? url('storage/' . $this->image) : null;
     }
 }

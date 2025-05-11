@@ -16,6 +16,10 @@ class Category extends Model
         'image'
     ];
 
+    protected $appends = [
+        'image_url'
+    ];
+
     public function products(): HasMany
     {
         return $this->hasMany(Product::class);
@@ -32,5 +36,10 @@ class Category extends Model
             $counter++;
         }
         return $slug;
+    }
+
+    public function getImageUrlAttribute()
+    {
+        return $this->image ? url('storage/' . $this->image) : null;
     }
 }

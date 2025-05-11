@@ -21,6 +21,10 @@ class Brand extends Model
         'is_active'
     ];
 
+    protected $appends = [
+        'logo_url'
+    ];
+
     public function products(): HasMany
     {
         return $this->hasMany(Product::class);
@@ -42,5 +46,10 @@ class Brand extends Model
             $counter++;
         }
         return $slug;
+    }
+
+    public function getImageUrlAttribute()
+    {
+        return $this->logo ? url('storage/' . $this->logo) : null;
     }
 }
